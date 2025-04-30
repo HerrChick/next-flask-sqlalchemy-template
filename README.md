@@ -1,6 +1,6 @@
 # Next.js + Flask + SQLAlchemy Template
 
-A modern full-stack web application template using Next.js for the frontend, Flask for the backend, and SQLAlchemy for database management. This template is set up with Docker for easy development and deployment.
+I have created this template to help me get back in the swing of using python, sqlalchemy, and Next after spending many years so engrossed in the world of Vanilla react, Node, Firebase, and NoSql/Firestore. This template is fully containerised, using next.js as a frontend and flask for the backend, with Postgres as a database (and PGAdmin bundled in for ease of use). This is a development ready template and NOT production ready. There is no correct handling of WSGI and you will need to add GNUicorn or something else to handle your WSGI needs. Docker containers are also set up in a devloper mode and the dockerfiles and docker compose are written as such.  
 
 ## Tech Stack
 
@@ -34,6 +34,8 @@ A modern full-stack web application template using Next.js for the frontend, Fla
 │   └── Dockerfile.dev # Development Docker configuration
 ├── backend/           # Flask backend application
 │   ├── db/           # Database models and migrations
+│   ├── migrations/   # Alembic migration files
+│   ├── alembic.ini   # Alembic configuration
 │   ├── app.py        # Main Flask application
 │   └── Dockerfile.dev # Development Docker configuration
 ├── docker-compose-dev.yml # Development environment configuration
@@ -64,6 +66,7 @@ This will:
 - Build and start the frontend and backend containers
 - Set up the development environment
 - Start the development servers
+- Initialize the database with migrations
 
 The application will be available at:
 - Frontend: http://localhost:3000
@@ -84,8 +87,29 @@ cd backend
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
+alembic upgrade head  # Run database migrations
 python app.py
 ```
+
+## Database Migrations
+
+This project uses Alembic for database migrations. To create and apply migrations:
+
+1. Create a new migration:
+   ```bash
+   cd backend
+   alembic revision --autogenerate -m "description of changes"
+   ```
+
+2. Apply migrations:
+   ```bash
+   alembic upgrade head
+   ```
+
+3. Rollback migrations:
+   ```bash
+   alembic downgrade -1  # Rollback one migration
+   ```
 
 ## Features
 
@@ -93,9 +117,9 @@ python app.py
 - Type-safe development with TypeScript
 - RESTful API with Flask
 - SQLAlchemy ORM for database management
+- Database migrations with Alembic
 - Dockerized development environment
 - Hot reloading for both frontend and backend
-- Database migrations with Alembic
 - Environment variable management
 - Code quality tools (ESLint)
 
@@ -107,7 +131,5 @@ python app.py
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
 
